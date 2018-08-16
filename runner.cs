@@ -77,11 +77,11 @@ namespace test
                                 nc = "'" + getv[i].ToString().Replace("'","''") + "'";
                                 break;
                             case "DATE":
-                                if (getv[i].ToString() != "1/1/0001 12:00:00 AM") {
-                                    nc = "'" + getv[i].ToString() + "'";
+                                if (getv[i].ToString() == "1/1/0001 12:00:00 AM" || getv[i].ToString() == "") {
+                                    nc = "NULL";
                                 }
                                 else {
-                                    nc = "NULL";
+                                    nc = "'" + getv[i].ToString() + "'";
                                 }
                                 break;
                             case "TIME":
@@ -117,7 +117,15 @@ namespace test
                     sql = "INSERT INTO rlarp.osmi VALUES " + sql;
                     pgcom.CommandText = sql;
                     System.IO.File.WriteAllText(@"C:\Users\ptrowbridge\Downloads\"+ t.ToString()+".sql",sql);
-                    pgcom.ExecuteNonQuery();
+                    try {
+                        pgcom.ExecuteNonQuery();
+                    }
+                    catch (Exception e) {
+                            Console.Write(Environment.NewLine);
+                            Console.Write(e.Message);
+                            ibmc.Close();
+                            pgc.Close();
+                    }
                     sql = "";
                 }
             }
@@ -125,7 +133,15 @@ namespace test
                 sql = "INSERT INTO rlarp.osmi VALUES " + sql;
                 pgcom.CommandText = sql;
                 System.IO.File.WriteAllText(@"C:\Users\ptrowbridge\Downloads\"+ t.ToString()+".sql",sql);
-                pgcom.ExecuteNonQuery();
+                try {
+                    pgcom.ExecuteNonQuery();
+                }
+                catch (Exception e) {
+                        Console.Write(Environment.NewLine);
+                        Console.Write(e.Message);
+                        ibmc.Close();
+                        pgc.Close();
+                }
                 sql = "";          
             }
 
