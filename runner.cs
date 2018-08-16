@@ -10,7 +10,7 @@ namespace test
 
         static void Main(string[] args)
         {
-            var i = new Int32();
+            //var i = new Int32();
 
             //-------------------------------------------establis connections-------------------------------------------------
             //var ibmc = new System.Data.Odbc.OdbcConnection("Driver={iSeries Access ODBC Driver};System=TEST400;Uid=tstdillen;Pwd=tstdillen");
@@ -42,41 +42,87 @@ namespace test
             //---------------------------------------------setup adapters---------------------------------------------------------
             //var ibmds = new System.Data.DataSet();
             //var ibmda = new System.Data.Odbc.OdbcDataAdapter(ibmcmd);
-            Console.Write(DateTime.Now);
             //ibmda.Fill(ibmds);
             
 
             var pgds = new System.Data.DataSet();
             var pgda = new NpgsqlDataAdapter(pgcmd);
             pgda.Fill(pgds);
+            //pgda.UpdateBatchSize = 100;
+
+            Console.Write("etl start:" + DateTime.Now.ToString());
+            Console.Write(Environment.NewLine);
 
             //--------------------------------------------move to target--------------------------------------------------------
             var ibmdr = ibmcmd.ExecuteReader();
-            while (ibmdr.Read()) {
-                var pgr = pgds.Tables[0].NewRow();
-                ibmdr.GetValues(pgr.ItemArray);
-                pgds.Tables[0].Rows.Add(pgr);
-                i=i+1;
-                if (i> 500){
-                    new NpgsqlCommandBuilder(pgda);
-                    pgda.Update(pgds);
-                    i=0;
+            var getv = new object[ibmdr.FieldCount];
+            int r = 0;
+            string sql = "";
+            string nr = "";
+            string nc = "";
+            var pgcom = pgc.CreateCommand();
+            while (ibmdr.Read()) { 
+                r = r + 1;
+                nr = "";  
+                /*  
+                for ( int i = 0 ; i < ibmdr.GetValues(getv);i++) {
+                    if (getv[i] != null) {
+                        switch (ibmdr.GetDataTypeName(i)){
+                            case "VARCHAR":
+                                nc = "'" + getv[i].ToString().Replace("'","''") + "'"; 
+                                break;
+                            case "CHAR":
+                                nc = "'" + getv[i].ToString().Replace("'","''") + "'";
+                                break;
+                            case "DATE":
+                                if (getv[i].ToString() != "1/1/0001 12:00:00 AM") {
+                                    nc = "'" + getv[i].ToString() + "'";
+                                }
+                                else {
+                                    nc = "NULL";
+                                }
+                                break;
+                            case "TIME":
+                                nc = "'" + getv[i].ToString() + "'";
+                                break;
+                            case "TIMESTAMP":
+                                nc = "'" + getv[i].ToString() + "'";
+                                break;
+                            default:
+                                nc = getv[i].ToString();
+                                break;
+                        }
+                    }
+                    else { 
+                        nc = "NULL";
+                    }
+                    if (i!=0) {
+                        nr = nr + ",";
+                    }
+                    nr = nr + nc;
                 }
+                if (sql!="") {
+                    sql = sql + ",";
+                }
+                sql = sql + "(" + nr + ")";
+                if (r == 500) {
+                    r = 0;
+                    pgcom.CommandText = "INSERT INTO lgdat.stkmm VALUES " + sql;
+                    //pgcom.ExecuteNonQuery();
+                    sql = "";
+                }
+                */
             }
-            new NpgsqlCommandBuilder(pgda);
-            try {
-                pgda.Update(pgds);
+            if (r != 0) {
+                pgcom.CommandText = "INSERT INTO lgdat.stkmm VALUES " + sql;
+                //pgcom.ExecuteNonQuery();
+                sql = "";          
             }
-            catch (Exception e) {
-                //Console.WriteLine("{0} Exception caught.", e);
-                Console.WriteLine(e.Message);
-            }
-            
 
             ibmc.Close();
             pgc.Close();
 
-            Console.Write(DateTime.Now);
+            Console.Write("etl end:" + DateTime.Now.ToString());
             
         }
     }
