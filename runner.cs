@@ -28,16 +28,16 @@ namespace test
             //ibmcmd.CommandText = "SELECT * FROM LGDAT.GLDATE";
             //ibmcmd.CommandText = "SELECT * FROM LGDAT.STKMM";
 
-            ibmcmd.CommandText = System.IO.File.ReadAllText(@"C:\Users\ptrowbridge\Documents\runner\stkmm.sql");
+            ibmcmd.CommandText = System.IO.File.ReadAllText(@"C:\Users\ptrowbridge\Documents\runner\osm.sql");
 
 
 
             var pgcmd = new NpgsqlCommand();
             pgcmd.Connection = pgc;
             //pgcmd.CommandText = "SELECT * FROM rlarp.trig_log_eav WHERE 0=1";
-            //pgcmd.CommandText = "SELECT * FROM rlarp.osmi WHERE 0=1";
+            pgcmd.CommandText = "SELECT * FROM rlarp.osmi WHERE 0=1";
             //pgcmd.CommandText = "SELECT * FROM lgdat.gldate WHERE 0=1";
-            pgcmd.CommandText = "SELECT * FROM lgdat.stkmm WHERE 0=1";
+            //pgcmd.CommandText = "SELECT * FROM lgdat.stkmm WHERE 0=1";
 
             //---------------------------------------------setup adapters---------------------------------------------------------
             //var ibmds = new System.Data.DataSet();
@@ -52,19 +52,21 @@ namespace test
 
             Console.Write("etl start:" + DateTime.Now.ToString());
             Console.Write(Environment.NewLine);
+            pgc.BeginTransaction();
 
             //--------------------------------------------move to target--------------------------------------------------------
             var ibmdr = ibmcmd.ExecuteReader();
             var getv = new object[ibmdr.FieldCount];
             int r = 0;
+            int t = 0;
             string sql = "";
             string nr = "";
             string nc = "";
             var pgcom = pgc.CreateCommand();
             while (ibmdr.Read()) { 
                 r = r + 1;
+                t = t +1 ;
                 nr = "";  
-                /*  
                 for ( int i = 0 ; i < ibmdr.GetValues(getv);i++) {
                     if (getv[i] != null) {
                         switch (ibmdr.GetDataTypeName(i)){
@@ -105,17 +107,20 @@ namespace test
                     sql = sql + ",";
                 }
                 sql = sql + "(" + nr + ")";
-                if (r == 500) {
+                if (r == 250) {
                     r = 0;
-                    pgcom.CommandText = "INSERT INTO lgdat.stkmm VALUES " + sql;
-                    //pgcom.ExecuteNonQuery();
+                    sql = "INSERT INTO rlarp.osmi VALUES " + sql;
+                    pgcom.CommandText = sql;
+                    System.IO.File.WriteAllText(@"C:\Users\ptrowbridge\Downloads\"+ t.ToString()+".sql",sql);
+                    pgcom.ExecuteNonQuery();
                     sql = "";
                 }
-                */
             }
             if (r != 0) {
-                pgcom.CommandText = "INSERT INTO lgdat.stkmm VALUES " + sql;
-                //pgcom.ExecuteNonQuery();
+                sql = "INSERT INTO rlarp.osmi VALUES " + sql;
+                pgcom.CommandText = sql;
+                System.IO.File.WriteAllText(@"C:\Users\ptrowbridge\Downloads\"+ t.ToString()+".sql",sql);
+                pgcom.ExecuteNonQuery();
                 sql = "";          
             }
 
