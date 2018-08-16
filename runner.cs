@@ -23,33 +23,38 @@ namespace test
             var ibmcmd = new System.Data.Odbc.OdbcCommand();
             ibmcmd.Connection = ibmc;
             //ibmcmd.CommandText = "SELECT cast(ID as int) ID, TBLN, ACTN, TS, SU, COL, REPLACE(OLDV,X'00',CHR(32)) OLDV, REPLACE(NEWV,X'00',CHR(32)) NEWV, DTYPE, LENG, SCAL FROM QGPL.TRIG_LOG_EAV WHERE ID > 236832";
-            //ibmcmd.CommandText = "SELECT * FROM RLARP.OSM WHERE ITER >= '2018-08-08-13.41.52.681140'";
+            //ibmcmd.CommandText = "SELECT * FROM RLARP.OSM WHERE ITER >= '2018-08-15-11.23.42.009654'";
             //ibmcmd.CommandText = "SELECT * FROM RLARP.OSMP";
             //ibmcmd.CommandText = "SELECT * FROM LGDAT.GLDATE";
-            ibmcmd.CommandText = "SELECT * FROM LGDAT.STKMM";
+            //ibmcmd.CommandText = "SELECT * FROM LGDAT.STKMM";
+
+            ibmcmd.CommandText = System.IO.File.ReadAllText(@"C:\Users\ptrowbridge\Documents\runner\stkmm.sql");
+
+
 
             var pgcmd = new NpgsqlCommand();
             pgcmd.Connection = pgc;
             //pgcmd.CommandText = "SELECT * FROM rlarp.trig_log_eav WHERE 0=1";
             //pgcmd.CommandText = "SELECT * FROM rlarp.osmi WHERE 0=1";
-            //pgcmd.CommandText = "SELECT * FROM rlarp.osmi WHERE 0=1";
             //pgcmd.CommandText = "SELECT * FROM lgdat.gldate WHERE 0=1";
             pgcmd.CommandText = "SELECT * FROM lgdat.stkmm WHERE 0=1";
 
             //---------------------------------------------setup adapters---------------------------------------------------------
-            var ibmds = new System.Data.DataSet();
-            var ibmda = new System.Data.Odbc.OdbcDataAdapter(ibmcmd);
+            //var ibmds = new System.Data.DataSet();
+            //var ibmda = new System.Data.Odbc.OdbcDataAdapter(ibmcmd);
             Console.Write(DateTime.Now);
-            ibmda.Fill(ibmds);
+            //ibmda.Fill(ibmds);
+            
 
             var pgds = new System.Data.DataSet();
             var pgda = new NpgsqlDataAdapter(pgcmd);
             pgda.Fill(pgds);
 
             //--------------------------------------------move to target--------------------------------------------------------
-            foreach (System.Data.DataRow ibmr in ibmds.Tables[0].Rows) {
+            var ibmdr = ibmcmd.ExecuteReader();
+            while (ibmdr.Read()) {
                 var pgr = pgds.Tables[0].NewRow();
-                pgr.ItemArray = ibmr.ItemArray;
+                ibmdr.GetValues(pgr.ItemArray);
                 pgds.Tables[0].Rows.Add(pgr);
                 i=i+1;
                 if (i> 500){
