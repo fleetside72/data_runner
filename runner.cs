@@ -52,7 +52,7 @@ namespace test
 
             Console.Write("etl start:" + DateTime.Now.ToString());
             Console.Write(Environment.NewLine);
-            pgc.BeginTransaction();
+            NpgsqlTransaction pgt = pgc.BeginTransaction();
 
             //--------------------------------------------move to target--------------------------------------------------------
             var ibmdr = ibmcmd.ExecuteReader();
@@ -140,11 +140,14 @@ namespace test
                         Console.Write(Environment.NewLine);
                         Console.Write(e.Message);
                         ibmc.Close();
+                        pgt.Rollback();
                         pgc.Close();
+
                 }
                 sql = "";          
             }
 
+            pgt.Commit();
             ibmc.Close();
             pgc.Close();
 
