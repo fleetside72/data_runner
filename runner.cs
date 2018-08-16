@@ -91,7 +91,12 @@ namespace test
                                 nc = "'" + getv[i].ToString() + "'";
                                 break;
                             default:
-                                nc = getv[i].ToString();
+                                if (getv[i].ToString() != "") {
+                                    nc = getv[i].ToString();
+                                }
+                                else {
+                                    nc = "NULL";
+                                }
                                 break;
                         }
                     }
