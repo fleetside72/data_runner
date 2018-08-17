@@ -22,6 +22,18 @@ namespace test
             string nr = "";
             string nc = "";
 
+            string msg = "Help:";
+            msg = msg + Environment.NewLine;
+            msg = msg + "-scs       source connection string";
+            msg = msg + Environment.NewLine;
+            msg = msg + "-dcs       destination connection string";
+            msg = msg + Environment.NewLine;
+            msg = msg + "-sq        path to source query";
+            msg = msg + Environment.NewLine;
+            msg = msg + "-dt        fully qualified name of destination table";
+            msg = msg + Environment.NewLine;
+            msg = msg + "--help     info";
+
             //---------------------------------------parse args into variables-------------------------------------------------
 
             for (int i = 0; i < args.Length; i = i +1 ){
@@ -42,6 +54,22 @@ namespace test
                     case "-dt":
                         dt = "INSERT INTO " + args[i+1] + " VALUES ";
                         break;
+                    case "--help":
+                        Console.Write(Environment.NewLine);
+                        Console.Write(msg);
+                        return;
+                    case "-help":
+                        Console.Write(Environment.NewLine);
+                        Console.Write(msg);
+                        return;
+                    case "-h":
+                        Console.Write(Environment.NewLine);
+                        Console.Write(msg);
+                        return;
+                    case @"\?":
+                        Console.Write(Environment.NewLine);
+                        Console.Write(msg);
+                        return;
                     default:
                         break;
                 }
