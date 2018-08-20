@@ -24,6 +24,8 @@ namespace test
 
             string msg = "Help:";
             msg = msg + Environment.NewLine;
+            msg = msg + "version 0.11";
+            msg = msg + Environment.NewLine;
             msg = msg + "-scs       source connection string";
             msg = msg + Environment.NewLine;
             msg = msg + "-dcs       destination connection string";
@@ -103,6 +105,7 @@ namespace test
             Console.Write(Environment.NewLine);
             Console.Write("etl start:" + DateTime.Now.ToString());
             NpgsqlTransaction pgt = pgc.BeginTransaction();
+            ibmcmd.CommandTimeout = 600;
             var ibmdr = ibmcmd.ExecuteReader();
             //setup getv object array dimensioned to number of columns for scenario
             var getv = new object[ibmdr.FieldCount];
