@@ -24,7 +24,7 @@ namespace test
 
             string msg = "Help:";
             msg = msg + Environment.NewLine;
-            msg = msg + "version 0.11";
+            msg = msg + "version 0.12";
             msg = msg + Environment.NewLine;
             msg = msg + "-scs       source connection string";
             msg = msg + Environment.NewLine;
@@ -106,7 +106,19 @@ namespace test
             Console.Write("etl start:" + DateTime.Now.ToString());
             NpgsqlTransaction pgt = pgc.BeginTransaction();
             ibmcmd.CommandTimeout = 600;
-            var ibmdr = ibmcmd.ExecuteReader();
+            System.Data.Odbc.OdbcDataReader ibmdr;
+            try {
+                ibmdr = ibmcmd.ExecuteReader();
+            }
+            catch (Exception e) {
+                Console.Write(Environment.NewLine);
+                Console.Write("error on source sql:");
+                Console.Write(Environment.NewLine);
+                Console.Write(e.Message);
+                ibmc.Close();
+                pgc.Close();
+                return;
+            }
             //setup getv object array dimensioned to number of columns for scenario
             var getv = new object[ibmdr.FieldCount];
 
@@ -184,7 +196,7 @@ namespace test
                 catch (Exception e) {
                         Console.Write(Environment.NewLine);
                         Console.Write(e.Message);
-                        ibmc.Close();
+                        //ibmc.Close();
                         pgt.Rollback();
                         pgc.Close();
 
