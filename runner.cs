@@ -24,7 +24,7 @@ namespace test
 
             string msg = "Help:";
             msg = msg + Environment.NewLine;
-            msg = msg + "version 0.12";
+            msg = msg + "version 0.13";
             msg = msg + Environment.NewLine;
             msg = msg + "-scs       source connection string";
             msg = msg + Environment.NewLine;
@@ -182,6 +182,7 @@ namespace test
                             Console.Write(Environment.NewLine);
                             Console.Write(e.Message);
                             ibmc.Close();
+                            pgt.Rollback();
                             pgc.Close();
                     }
                     sql = "";
