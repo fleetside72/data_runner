@@ -180,6 +180,7 @@ namespace test
                     catch (Exception e) {
                             Console.Write(Environment.NewLine);
                             Console.Write(e.Message);
+                            System.IO.File.WriteAllText(@"C:\Users\ptrowbridge\Downloads\runner_error.sql",sql);
                             ibmc.Close();
                             pgt.Rollback();
                             pgc.Close();
