@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FileHelpers" Version="3.2.7" />
     <PackageReference Include="Npgsql" Version="4.0.0" />
     <PackageReference Include="System.Data.Odbc" Version="4.5.0" />
   </ItemGroup>
