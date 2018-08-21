@@ -23,7 +23,7 @@ namespace test
             string nl = Environment.NewLine;
 
             string msg = "Help:";
-            msg = msg + nl + "version 0.15";
+            msg = msg + nl + "version 0.16";
             msg = msg + nl + "-scs       source connection string";
             msg = msg + nl + "-dcs       destination connection string";
             msg = msg + nl + "-sq        path to source query";
@@ -114,15 +114,16 @@ namespace test
                 return;
             }
             //setup getv object array dimensioned to number of columns for scenario
+            //getv hold an array of datareader row
             var getv = new object[ibmdr.FieldCount];
-
+            //dtn holds list of data types per column
+            var dtn = new string[ibmdr.FieldCount];
             while (ibmdr.Read()) { 
                 r = r + 1;
                 t = t +1 ;
                 nr = "";  
-                var dtn = new string[ibmdr.FieldCount];
                 //populate all the data type names into a string array instead of calling against ibmdr in every iteration
-                if (t ==1 ) {
+                if (t == 1 ) {
                     for (int i = 0; i < ibmdr.GetValues(getv); i++){
                         dtn[i] = ibmdr.GetDataTypeName(i);
                     }
