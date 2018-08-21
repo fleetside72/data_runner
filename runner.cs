@@ -123,7 +123,7 @@ namespace test
                 var dtn = new string[ibmdr.FieldCount];
                 //populate all the data type names into a string array instead of calling against ibmdr in every iteration
                 if (t ==1 ) {
-                    for (int i = 0; i <= ibmdr.GetValues(getv); i++){
+                    for (int i = 0; i < ibmdr.GetValues(getv); i++){
                         dtn[i] = ibmdr.GetDataTypeName(i);
                     }
                 }
