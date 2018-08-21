@@ -189,6 +189,7 @@ namespace test
                             return;
                     }
                     sql = "";
+                    Console.Write(nl + t.ToString());
                 }
             }
             if (r != 0) {
@@ -206,7 +207,8 @@ namespace test
                         pgc.Close();
                         return;
                 }
-                sql = "";          
+                sql = "";    
+                Console.Write(nl + t.ToString());      
             }
 
             pgt.Commit();
