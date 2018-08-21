@@ -23,7 +23,7 @@ namespace test
             string nl = Environment.NewLine;
 
             string msg = "Help:";
-            msg = msg + nl + "version 0.14";
+            msg = msg + nl + "version 0.15";
             msg = msg + nl + "-scs       source connection string";
             msg = msg + nl + "-dcs       destination connection string";
             msg = msg + nl + "-sq        path to source query";
@@ -120,9 +120,16 @@ namespace test
                 r = r + 1;
                 t = t +1 ;
                 nr = "";  
+                var dtn = new string[ibmdr.FieldCount];
+                //populate all the data type names into a string array instead of calling against ibmdr in every iteration
+                if (t ==1 ) {
+                    for (int i = 0; i <= ibmdr.GetValues(getv); i++){
+                        dtn[i] = ibmdr.GetDataTypeName(i);
+                    }
+                }
                 for ( int i = 0 ; i < ibmdr.GetValues(getv);i++) {
                     if (getv[i] != null) {
-                        switch (ibmdr.GetDataTypeName(i)){
+                        switch (dtn[i]){
                             case "VARCHAR":
                                 nc = "'" + getv[i].ToString().Replace("'","''") + "'"; 
                                 break;
