@@ -20,20 +20,15 @@ namespace test
             string sql = "";
             string nr = "";
             string nc = "";
+            string nl = Environment.NewLine;
 
             string msg = "Help:";
-            msg = msg + Environment.NewLine;
-            msg = msg + "version 0.14";
-            msg = msg + Environment.NewLine;
-            msg = msg + "-scs       source connection string";
-            msg = msg + Environment.NewLine;
-            msg = msg + "-dcs       destination connection string";
-            msg = msg + Environment.NewLine;
-            msg = msg + "-sq        path to source query";
-            msg = msg + Environment.NewLine;
-            msg = msg + "-dt        fully qualified name of destination table";
-            msg = msg + Environment.NewLine;
-            msg = msg + "--help     info";
+            msg = msg + nl + "version 0.14";
+            msg = msg + nl + "-scs       source connection string";
+            msg = msg + nl + "-dcs       destination connection string";
+            msg = msg + nl + "-sq        path to source query";
+            msg = msg + nl + "-dt        fully qualified name of destination table";
+            msg = msg + nl + "--help     info";
 
             //---------------------------------------parse args into variables-------------------------------------------------
 
@@ -104,7 +99,7 @@ namespace test
             Console.Write(Environment.NewLine);
             Console.Write("etl start:" + DateTime.Now.ToString());
             NpgsqlTransaction pgt = pgc.BeginTransaction();
-            ibmcmd.CommandTimeout = 600;
+            ibmcmd.CommandTimeout = 6000;
             System.Data.Odbc.OdbcDataReader ibmdr;
             try {
                 ibmdr = ibmcmd.ExecuteReader();
