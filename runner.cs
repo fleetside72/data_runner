@@ -138,21 +138,19 @@ namespace test
                         switch (dtn[i]){
                             case "VARCHAR":
                                 if (trim)  {
-                                    nc = "'" + getv[i].ToString().Replace("'","''").Trim() + "'";     
+                                    nc = "'" + getv[i].ToString().Replace("'","''").TrimEnd() + "'";     
                                 }
                                 else {
                                     nc = "'" + getv[i].ToString().Replace("'","''") + "'";     
                                 }
-                                nc = "'" + getv[i].ToString().Replace("'","''") + "'"; 
                                 break;
                             case "CHAR":
                                 if (trim)  {
-                                    nc = "'" + getv[i].ToString().Replace("'","''").Trim() + "'";     
+                                    nc = "'" + getv[i].ToString().Replace("'","''").TrimEnd() + "'";     
                                 }
                                 else {
                                     nc = "'" + getv[i].ToString().Replace("'","''") + "'";     
                                 }
-                                nc = "'" + getv[i].ToString().Replace("'","''") + "'"; 
                                 break;
                             case "DATE":
                                 if (getv[i].ToString() == "1/1/0001 12:00:00 AM" || getv[i].ToString() == "") {
