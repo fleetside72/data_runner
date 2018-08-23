@@ -15,6 +15,7 @@ namespace test
             string dcs = ""; //= "Host=ushcc10091;Port=5432;Username=ptrowbridge;Password=qqqx53!026;Database=ubm;ApplicationName=runner";
             string sq = ""; //= System.IO.File.ReadAllText(@"C:\Users\ptrowbridge\Documents\runner\osm.sql");
             string dt = ""; //= "rlarp.omsi";
+            Boolean trim = false;
             int r = 0;
             int t = 0;
             string sql = "";
@@ -23,11 +24,12 @@ namespace test
             string nl = Environment.NewLine;
 
             string msg = "Help:";
-            msg = msg + nl + "version 0.16";
+            msg = msg + nl + "version 0.17";
             msg = msg + nl + "-scs       source connection string";
             msg = msg + nl + "-dcs       destination connection string";
             msg = msg + nl + "-sq        path to source query";
             msg = msg + nl + "-dt        fully qualified name of destination table";
+            msg = msg + nl + "-t         trim text";
             msg = msg + nl + "--help     info";
 
             //---------------------------------------parse args into variables-------------------------------------------------
@@ -49,6 +51,9 @@ namespace test
                     //destination table name
                     case "-dt":
                         dt = "INSERT INTO " + args[i+1] + " VALUES ";
+                        break;
+                    case "-t":
+                        trim = true;
                         break;
                     case "--help":
                         Console.Write(Environment.NewLine);
@@ -132,10 +137,22 @@ namespace test
                     if (getv[i] != null) {
                         switch (dtn[i]){
                             case "VARCHAR":
+                                if (trim)  {
+                                    nc = "'" + getv[i].ToString().Replace("'","''").Trim() + "'";     
+                                }
+                                else {
+                                    nc = "'" + getv[i].ToString().Replace("'","''") + "'";     
+                                }
                                 nc = "'" + getv[i].ToString().Replace("'","''") + "'"; 
                                 break;
                             case "CHAR":
-                                nc = "'" + getv[i].ToString().Replace("'","''") + "'";
+                                if (trim)  {
+                                    nc = "'" + getv[i].ToString().Replace("'","''").Trim() + "'";     
+                                }
+                                else {
+                                    nc = "'" + getv[i].ToString().Replace("'","''") + "'";     
+                                }
+                                nc = "'" + getv[i].ToString().Replace("'","''") + "'"; 
                                 break;
                             case "DATE":
                                 if (getv[i].ToString() == "1/1/0001 12:00:00 AM" || getv[i].ToString() == "") {
