@@ -32,6 +32,7 @@ namespace test
             msg = msg + nl + "-t         trim text";
             msg = msg + nl + "--help     info";
 
+
             //---------------------------------------parse args into variables-------------------------------------------------
 
             for (int i = 0; i < args.Length; i = i +1 ){
@@ -121,6 +122,7 @@ namespace test
             //setup getv object array dimensioned to number of columns for scenario
             //getv hold an array of datareader row
             var getv = new object[ibmdr.FieldCount];
+            int cols = ibmdr.FieldCount;
             //dtn holds list of data types per column
             var dtn = new string[ibmdr.FieldCount];
             while (ibmdr.Read()) { 
@@ -129,46 +131,59 @@ namespace test
                 nr = "";  
                 //populate all the data type names into a string array instead of calling against ibmdr in every iteration
                 if (t == 1 ) {
-                    for (int i = 0; i < ibmdr.GetValues(getv); i++){
+                    for (int i = 0; i < cols; i++){
                         dtn[i] = ibmdr.GetDataTypeName(i);
                     }
                 }
-                for ( int i = 0 ; i < ibmdr.GetValues(getv);i++) {
-                    if (getv[i] != null) {
+                for (int i = 0 ; i < cols;i++) {
+                    //Console.Write(nl);
+                    //Console.Write(DBNull.Value.Equals(ibmdr.GetValue(i)).ToString());
+                    //Console.Write(ibmdr.GetValue(i).ToString());
+                    Boolean dnull = false; 
+                    if (dtn[i] == "BIGINT") {
+                        dnull = DBNull.Value.Equals(ibmdr.GetInt64(i));
+                    } 
+                    else {
+                        dnull = DBNull.Value.Equals(ibmdr.GetValue(i));
+                    }
+                    if (!  dnull) {
                         switch (dtn[i]){
                             case "VARCHAR":
                                 if (trim)  {
-                                    nc = "'" + getv[i].ToString().Replace("'","''").TrimEnd() + "'";     
+                                    nc = "'" + ibmdr.GetValue(i).ToString().Replace("'","''").TrimEnd() + "'";     
                                 }
                                 else {
-                                    nc = "'" + getv[i].ToString().Replace("'","''") + "'";     
+                                    nc = "'" + ibmdr.GetValue(i).ToString().Replace("'","''") + "'";     
                                 }
                                 break;
                             case "CHAR":
                                 if (trim)  {
-                                    nc = "'" + getv[i].ToString().Replace("'","''").TrimEnd() + "'";     
+                                    nc = "'" + ibmdr.GetValue(i).ToString().Replace("'","''").TrimEnd() + "'";     
                                 }
                                 else {
-                                    nc = "'" + getv[i].ToString().Replace("'","''") + "'";     
+                                    nc = "'" + ibmdr.GetValue(i).ToString().Replace("'","''") + "'";     
                                 }
                                 break;
                             case "DATE":
-                                if (getv[i].ToString() == "1/1/0001 12:00:00 AM" || getv[i].ToString() == "") {
+                                if (ibmdr.GetValue(i).ToString() == "1/1/0001 12:00:00 AM" || ibmdr.GetValue(i).ToString() == "") {
                                     nc = "NULL";
                                 }
                                 else {
-                                    nc = "'" + getv[i].ToString() + "'";
+                                    nc = "'" + ibmdr.GetValue(i).ToString() + "'";
                                 }
                                 break;
                             case "TIME":
-                                nc = "'" + getv[i].ToString() + "'";
+                                nc = "'" + ibmdr.GetValue(i).ToString() + "'";
                                 break;
                             case "TIMESTAMP":
-                                nc = "'" + getv[i].ToString() + "'";
+                                nc = "'" + ibmdr.GetValue(i).ToString() + "'";
+                                break;
+                            case "BIGINT":
+                                nc = ibmdr.GetInt64(i).ToString();
                                 break;
                             default:
-                                if (getv[i].ToString() != "") {
-                                    nc = getv[i].ToString();
+                                if (ibmdr.GetValue(i).ToString() != "") {
+                                    nc = ibmdr.GetValue(i).ToString();
                                 }
                                 else {
                                     nc = "NULL";
