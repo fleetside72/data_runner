@@ -10,11 +10,10 @@ namespace test
         static void Main(string[] args)
         {
             
-            string scs = ""; //= "Driver={iSeries Access ODBC Driver};System=S7830956;Uid=PTROWBRIDG;Pwd=QQQX53@027";
-            //string scs = ""; //= "Driver={iSeries Access ODBC Driver};System=TEST400;Uid=tstdillen;Pwd=tstdillen"
-            string dcs = ""; //= "Host=ushcc10091;Port=5432;Username=ptrowbridge;Password=qqqx53!026;Database=ubm;ApplicationName=runner";
-            string sq = ""; //= System.IO.File.ReadAllText(@"C:\Users\ptrowbridge\Documents\runner\osm.sql");
-            string dt = ""; //= "rlarp.omsi";
+            string scs = "";
+            string dcs = "";
+            string sq = "";
+            string dt = "";
             Boolean trim = false;
             int r = 0;
             int t = 0;
@@ -24,7 +23,7 @@ namespace test
             string nl = Environment.NewLine;
 
             string msg = "Help:";
-            msg = msg + nl + "version 0.18";
+            msg = msg + nl + "version 0.19";
             msg = msg + nl + "-scs       source connection string";
             msg = msg + nl + "-dcs       destination connection string";
             msg = msg + nl + "-sq        path to source query";
