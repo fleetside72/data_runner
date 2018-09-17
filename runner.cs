@@ -23,7 +23,7 @@ namespace test
             string nl = Environment.NewLine;
 
             string msg = "Help:";
-            msg = msg + nl + "version 0.19";
+            msg = msg + nl + "version 0.20";
             msg = msg + nl + "-scs       source connection string";
             msg = msg + nl + "-dcs       destination connection string";
             msg = msg + nl + "-sq        path to source query";
@@ -175,7 +175,7 @@ namespace test
                                 nc = "'" + ibmdr.GetValue(i).ToString() + "'";
                                 break;
                             case "TIMESTAMP":
-                                nc = "'" + ibmdr.GetValue(i).ToString() + "'";
+                                nc = "'" + ibmdr.GetDateTime(i).ToString() + "'";
                                 break;
                             case "BIGINT":
                                 nc = ibmdr.GetInt64(i).ToString();
