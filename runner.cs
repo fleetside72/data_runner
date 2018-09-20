@@ -23,7 +23,7 @@ namespace test
             string nl = Environment.NewLine;
 
             string msg = "Help:";
-            msg = msg + nl + "version 0.20";
+            msg = msg + nl + "version 0.22";
             msg = msg + nl + "-scs       source connection string";
             msg = msg + nl + "-dcs       destination connection string";
             msg = msg + nl + "-sq        path to source query";
@@ -46,7 +46,13 @@ namespace test
                         break;
                     //source query path
                     case "-sq":
-                        sq = System.IO.File.ReadAllText(args[i+1]);
+                        try {
+                            sq = System.IO.File.ReadAllText(args[i+1]);
+                        }
+                        catch (Exception e) {
+                            Console.Write(nl + "error reasing source sql file: " + e.Message);
+                            return;
+                        }
                         break;
                     //destination table name
                     case "-dt":
@@ -56,19 +62,19 @@ namespace test
                         trim = true;
                         break;
                     case "--help":
-                        Console.Write(Environment.NewLine);
+                        Console.Write(nl);
                         Console.Write(msg);
                         return;
                     case "-help":
-                        Console.Write(Environment.NewLine);
+                        Console.Write(nl);
                         Console.Write(msg);
                         return;
                     case "-h":
-                        Console.Write(Environment.NewLine);
+                        Console.Write(nl);
                         Console.Write(msg);
                         return;
                     case @"\?":
-                        Console.Write(Environment.NewLine);
+                        Console.Write(nl);
                         Console.Write(msg);
                         return;
                     default:
@@ -76,13 +82,13 @@ namespace test
                 }
             }
 
-            Console.Write(Environment.NewLine);
+            Console.Write(nl);
             Console.Write(scs);
-            Console.Write(Environment.NewLine);
+            Console.Write(nl);
             Console.Write(dcs);
-            Console.Write(Environment.NewLine);
+            Console.Write(nl);
             Console.Write(sq);
-            Console.Write(Environment.NewLine);
+            Console.Write(nl);
             Console.Write(dt);
 
             //return;
@@ -91,8 +97,23 @@ namespace test
 
             var ibmc = new System.Data.Odbc.OdbcConnection(scs);
             var pgc = new NpgsqlConnection(dcs);
+            try {
             ibmc.Open();
+            }
+            catch (Exception e) {
+                Console.Write(nl + "issue connection to source: " + e.Message);
+                return;
+            }
+
+            try {
             pgc.Open();
+            }
+            catch (Exception e) {
+                ibmc.Close();
+                Console.Write(nl + "issue connecting to destination: "+ e.Message);
+            }
+            
+            
 
             //----------------------------------------------setup commands---------------------------------------------------
 
@@ -101,7 +122,7 @@ namespace test
 
             //---------------------------------------------begin transaction---------------------------------------------------------
 
-            Console.Write(Environment.NewLine);
+            Console.Write(nl);
             Console.Write("etl start:" + DateTime.Now.ToString());
             NpgsqlTransaction pgt = pgc.BeginTransaction();
             ibmcmd.CommandTimeout = 6000;
@@ -110,9 +131,9 @@ namespace test
                 ibmdr = ibmcmd.ExecuteReader();
             }
             catch (Exception e) {
-                Console.Write(Environment.NewLine);
+                Console.Write(nl);
                 Console.Write("error on source sql:");
-                Console.Write(Environment.NewLine);
+                Console.Write(nl);
                 Console.Write(e.Message);
                 ibmc.Close();
                 pgc.Close();
@@ -210,7 +231,7 @@ namespace test
                         pgcom.ExecuteNonQuery();
                     }
                     catch (Exception e) {
-                            Console.Write(Environment.NewLine);
+                            Console.Write(nl);
                             Console.Write(e.Message);
                             System.IO.File.WriteAllText(@"C:\Users\ptrowbridge\Downloads\runner_error.sql",sql);
                             ibmc.Close();
@@ -229,7 +250,7 @@ namespace test
                     pgcom.ExecuteNonQuery();
                 }
                 catch (Exception e) {
-                        Console.Write(Environment.NewLine);
+                        Console.Write(nl);
                         Console.Write(e.Message);
                         System.IO.File.WriteAllText(@"C:\Users\ptrowbridge\Downloads\runner_error.sql",sql);
                         //ibmc.Close();
@@ -245,7 +266,7 @@ namespace test
             ibmc.Close();
             pgc.Close();
 
-            Console.Write(Environment.NewLine);
+            Console.Write(nl);
             Console.Write("etl end:" + DateTime.Now.ToString());
             
         }
