@@ -102,12 +102,14 @@ namespace test
             }
             catch (Exception e) {
                 Console.Write(nl + "bad source connection string: " + e.Message);
+                return;
             }
             try {
                 pgc.ConnectionString = dcs;
             }
             catch (Exception e) {
                 Console.Write(nl + "bad source connection string: " + e.Message);
+                return;
             }
             try {
                 ibmc.Open();
