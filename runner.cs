@@ -21,11 +21,11 @@ namespace test
             string nr = "";
             string nc = "";
             string nl = Environment.NewLine;
-            var ibmc;
-            var pgc;
+            System.Data.Odbc.OdbcConnection ibmc = new System.Data.Odbc.OdbcConnection();
+            NpgsqlConnection pgc = new NpgsqlConnection();
 
             string msg = "Help:";
-            msg = msg + nl + "version 0.23";
+            msg = msg + nl + "version 0.24";
             msg = msg + nl + "-scs       source connection string";
             msg = msg + nl + "-dcs       destination connection string";
             msg = msg + nl + "-sq        path to source query";
@@ -98,13 +98,13 @@ namespace test
             //-------------------------------------------establish connections-------------------------------------------------
 
             try {
-                ibmc = new System.Data.Odbc.OdbcConnection(scs);
+                ibmc.ConnectionString = scs;
             }
             catch (Exception e) {
                 Console.Write(nl + "bad source connection string: " + e.Message);
             }
             try {
-                pgc = new NpgsqlConnection(dcs);
+                pgc.ConnectionString = dcs;
             }
             catch (Exception e) {
                 Console.Write(nl + "bad source connection string: " + e.Message);
