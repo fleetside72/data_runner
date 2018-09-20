@@ -25,7 +25,7 @@ namespace test
             var pgc;
 
             string msg = "Help:";
-            msg = msg + nl + "version 0.22";
+            msg = msg + nl + "version 0.23";
             msg = msg + nl + "-scs       source connection string";
             msg = msg + nl + "-dcs       destination connection string";
             msg = msg + nl + "-sq        path to source query";
