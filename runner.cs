@@ -21,6 +21,8 @@ namespace test
             string nr = "";
             string nc = "";
             string nl = Environment.NewLine;
+            var ibmc;
+            var pgc;
 
             string msg = "Help:";
             msg = msg + nl + "version 0.22";
@@ -95,10 +97,20 @@ namespace test
 
             //-------------------------------------------establish connections-------------------------------------------------
 
-            var ibmc = new System.Data.Odbc.OdbcConnection(scs);
-            var pgc = new NpgsqlConnection(dcs);
             try {
-            ibmc.Open();
+                ibmc = new System.Data.Odbc.OdbcConnection(scs);
+            }
+            catch (Exception e) {
+                Console.Write(nl + "bad source connection string: " + e.Message);
+            }
+            try {
+                pgc = new NpgsqlConnection(dcs);
+            }
+            catch (Exception e) {
+                Console.Write(nl + "bad source connection string: " + e.Message);
+            }
+            try {
+                ibmc.Open();
             }
             catch (Exception e) {
                 Console.Write(nl + "issue connection to source: " + e.Message);
@@ -106,7 +118,7 @@ namespace test
             }
 
             try {
-            pgc.Open();
+                pgc.Open();
             }
             catch (Exception e) {
                 ibmc.Close();
