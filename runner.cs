@@ -12,6 +12,8 @@ namespace test
             
             string scs = "";
             string dcs = "";
+            string sdt = "";
+            string ddt = "";
             string sq = "";
             string dt = "";
             Boolean trim = false;
@@ -25,22 +27,39 @@ namespace test
             NpgsqlConnection pgc = new NpgsqlConnection();
 
             string msg = "Help:";
-            msg = msg + nl + "version 0.24";
+            msg = msg + nl + "version 0.25";
+            msg = msg + nl;
+            msg = msg + nl + "options:";
+            msg = msg + nl + "-sdt       sourc driver type";
             msg = msg + nl + "-scs       source connection string";
+            msg = msg + nl + "-ddt       destination driver type";
             msg = msg + nl + "-dcs       destination connection string";
             msg = msg + nl + "-sq        path to source query";
             msg = msg + nl + "-dt        fully qualified name of destination table";
             msg = msg + nl + "-t         trim text";
             msg = msg + nl + "--help     info";
+            msg = msg + nl;
+            msg = msg + nl + "available driver types:";
+            msg = msg + nl + "-------------------------";
+            msg = msg + nl + "* odbc";
+            msg = msg + nl + "* npgsql";
 
 
             //---------------------------------------parse args into variables-------------------------------------------------
 
             for (int i = 0; i < args.Length; i = i +1 ){
                 switch (args[i]) {
+                    //sourc driver type
+                    case "-sdt":
+                        sdt = args[i+1];
+                        break;
                     //source connection string
                     case "-scs":
                         scs = args[i+1];
+                        break;
+                    //destination driver type
+                    case "-ddt":
+                        ddt = args[i+1];
                         break;
                     //destination connection string
                     case "-dcs":
@@ -85,8 +104,10 @@ namespace test
             }
 
             Console.Write(nl);
+            Console.Write(sdt);
             Console.Write(scs);
             Console.Write(nl);
+            Console.Write(ddt);
             Console.Write(dcs);
             Console.Write(nl);
             Console.Write(sq);
