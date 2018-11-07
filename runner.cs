@@ -23,8 +23,13 @@ namespace test
             string nr = "";
             string nc = "";
             string nl = Environment.NewLine;
-            System.Data.Odbc.OdbcConnection ibmc = new System.Data.Odbc.OdbcConnection();
-            NpgsqlConnection pgc = new NpgsqlConnection();
+            //declaring these objects globally will asume these libraries exist, they may not
+            System.Data.Odbc.OdbcConnection s_odbc = new System.Data.Odbc.OdbcConnection();
+            System.Data.Odbc.OdbcConnection d_odbc = new System.Data.Odbc.OdbcConnection();
+            NpgsqlConnection s_npgsql = new NpgsqlConnection();
+            NpgsqlConnection d_npgsql = new NpgsqlConnection();
+            System.Data.Common.DbConnection sc; //source connection
+            System.Data.Common.DbConnection dc; //destination connection
 
             string msg = "Help:";
             msg = msg + nl + "version 0.25";
@@ -118,22 +123,41 @@ namespace test
 
             //-------------------------------------------establish connections-------------------------------------------------
 
+            //setup source
+            switch (sdt){
+                case "odbc":
+                    try {
+                        s_odbc.ConnectionString = scs;
+                    }
+                    catch (Exception e) {
+                        Console.Write(nl + "bad source connection string: " + e.Message);
+                        return;
+                    }
+                    sc = s_odbc;
+                    return;
+                default:
+                    break;
+            }
+
+            //setup destination
+            switch (ddt) {
+                case "npgsql":
+                    try {
+                        d_npgsql.ConnectionString = dcs;
+                    }
+                    catch (Exception e) {
+                        Console.Write(nl + "bad source connection string: " + e.Message);
+                        return;
+                    }
+                    dc = d_npgsql;
+                    return;
+                default:
+                    break;
+            }
+
+            //polymorph open
             try {
-                ibmc.ConnectionString = scs;
-            }
-            catch (Exception e) {
-                Console.Write(nl + "bad source connection string: " + e.Message);
-                return;
-            }
-            try {
-                pgc.ConnectionString = dcs;
-            }
-            catch (Exception e) {
-                Console.Write(nl + "bad source connection string: " + e.Message);
-                return;
-            }
-            try {
-                ibmc.Open();
+                sc.Open();
             }
             catch (Exception e) {
                 Console.Write(nl + "issue connection to source: " + e.Message);
@@ -141,10 +165,10 @@ namespace test
             }
 
             try {
-                pgc.Open();
+                dc.Open();
             }
             catch (Exception e) {
-                ibmc.Close();
+                sc.Close();
                 Console.Write(nl + "issue connecting to destination: "+ e.Message);
             }
             
@@ -152,26 +176,29 @@ namespace test
 
             //----------------------------------------------setup commands---------------------------------------------------
 
-            var ibmcmd = new System.Data.Odbc.OdbcCommand(sq,ibmc);
-            var pgcom = pgc.CreateCommand();
+            var s_cmd = new System.Data.Odbc.OdbcCommand();
+            var pgcom = d_npgsql.CreateCommand();
 
             //---------------------------------------------begin transaction---------------------------------------------------------
 
             Console.Write(nl);
             Console.Write("etl start:" + DateTime.Now.ToString());
             NpgsqlTransaction pgt = pgc.BeginTransaction();
-            ibmcmd.CommandTimeout = 6000;
-            System.Data.Odbc.OdbcDataReader ibmdr;
+            s_odbcommandTimeout = 6000;
+            s_odbcommandTimeout = 6000;
+            system.Data.Odbc.OdbcDataReader ibmdr;
             try {
-                ibmdr = ibmcmd.ExecuteReader();
-            }
+                ibmdr = s_odbcxecuteReader();
+                ibmdr = s_odbcxecuteReader();
+    d    }
             catch (Exception e) {
                 Console.Write(nl);
                 Console.Write("error on source sql:");
                 Console.Write(nl);
                 Console.Write(e.Message);
-                ibmc.Close();
-                pgc.Close();
+                s_odbcse();
+                s_odbcse();
+                pgc.Cldse();
                 return;
             }
             //setup getv object array dimensioned to number of columns for scenario
@@ -269,8 +296,9 @@ namespace test
                             Console.Write(nl);
                             Console.Write(e.Message);
                             System.IO.File.WriteAllText(@"C:\Users\ptrowbridge\Downloads\runner_error.sql",sql);
-                            ibmc.Close();
-                            pgt.Rollback();
+                            s_odbcse();
+                            s_odbcse();
+                            pgt.Rollbdck();
                             pgc.Close();
                             return;
                     }
@@ -288,8 +316,9 @@ namespace test
                         Console.Write(nl);
                         Console.Write(e.Message);
                         System.IO.File.WriteAllText(@"C:\Users\ptrowbridge\Downloads\runner_error.sql",sql);
-                        //ibmc.Close();
-                        pgt.Rollback();
+                        //s_odbcse();
+                        //s_odbcse();
+                        pgt.Rodlback();
                         pgc.Close();
                         return;
                 }
@@ -298,8 +327,9 @@ namespace test
             }
 
             pgt.Commit();
-            ibmc.Close();
-            pgc.Close();
+            s_odbcse();
+            s_odbcse();
+            pgc.Cldse();
 
             Console.Write(nl);
             Console.Write("etl end:" + DateTime.Now.ToString());
