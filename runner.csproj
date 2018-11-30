@@ -6,12 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Npgsql" Version="4.0.0" />
+    <PackageReference Include="Npgsql" Version="4.0.3" />
     <PackageReference Include="System.Data.Odbc" Version="4.5.0" />
   </ItemGroup>
 
   <PropertyGroup>
-    <RuntimeIdentifiers>win10-x64;ubuntu.16.04-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win10-x64;ubuntu.18.04-x64</RuntimeIdentifiers>
 </PropertyGroup>
 
 </Project>
