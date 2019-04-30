@@ -190,7 +190,7 @@ namespace test
             try {
                 ibmdr = s_odbcxecuteReader();
                 ibmdr = s_odbcxecuteReader();
-    d    }
+            }
             catch (Exception e) {
                 Console.Write(nl);
                 Console.Write("error on source sql:");
