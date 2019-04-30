@@ -25,7 +25,7 @@ namespace test
             NpgsqlConnection pgc = new NpgsqlConnection();
 
             string msg = "Help:";
-            msg = msg + nl + "version 0.24";
+            msg = msg + nl + "version 0.25";
             msg = msg + nl + "-scs       source connection string";
             msg = msg + nl + "-dcs       destination connection string";
             msg = msg + nl + "-sq        path to source query";
