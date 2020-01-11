@@ -138,6 +138,8 @@ namespace test
                 default:
                     break;
             }
+            s_odbc.ConnectionString = scs;
+            sc = s_odbc;
 
             //setup destination
             switch (ddt) {
@@ -154,7 +156,10 @@ namespace test
                 default:
                     break;
             }
+            d_npgsql.ConnectionString = dcs;
+            dc = d_npgsql;
 
+            /*
             //polymorph open
             try {
                 sc.Open();
@@ -183,6 +188,8 @@ namespace test
 
             Console.Write(nl);
             Console.Write("etl start:" + DateTime.Now.ToString());
+
+            /*
             NpgsqlTransaction pgt = pgc.BeginTransaction();
             s_odbcommandTimeout = 6000;
             s_odbcommandTimeout = 6000;
@@ -333,7 +340,7 @@ namespace test
 
             Console.Write(nl);
             Console.Write("etl end:" + DateTime.Now.ToString());
-            
+            */
         }
     }
 }
